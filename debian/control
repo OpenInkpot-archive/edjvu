@@ -1,0 +1,33 @@
+Source: edjvu
+Section: gui
+Priority: optional
+Maintainer: Alexander Kerner <lunohod@openinkpot.org>
+Build-Depends: debhelper (>= 6), cdbs, automake1.7 | automaken, libtool, pkg-config, libdjvulibre-dev
+Standards-Version: 3.7.3
+Homepage: http://www.enlightenment.org
+XCS-Cross-Host-Build-Depends: debhelper (>= 6), cdbs, cdbs-embedded, automake, libtool, pkg-config
+XCS-Cross-Build-Depends: libecore-dev, libevas-dev, libdjvulibre-dev
+XS-Vcs-Git: http://git.openinkpot.org/edjvu.git
+XS-Vcs-Browser: http://git.openinkpot.org/edjvu.git
+
+Package: libedjvu-dev
+Section: libdevel
+Architecture: any
+Depends: libedjvu0 (= ${Source-Version}), libdjvulibre-dev
+Description: Enlightenment DR17 djvu viewer using djvulibre - development files
+
+Package: libedjvu0
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Enlightenment DR17 djvu viewer using djvulibre.
+
+Package: libedjvu0-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: libedjvu0 (= ${binary:Version})
+Description: Enlightenment DR17 djvu viewer using djvulibre - debug symbols
+ This package contains unstripped shared libraries. It is provided primarily
+ to provide a backtrace with names in a debugger, this makes it somewhat easier
+ to interpret core dumps. The libraries are installed in /usr/lib/debug and
+ are automatically used by gdb.

@@ -1,0 +1,12 @@
+*.o
+*.lo
+*.a
+*.so
+*~
+*.a
+*.gitignore
+tags
+*.swp
+*.in
+.libs
+.deps
