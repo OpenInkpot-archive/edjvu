@@ -1,8 +1,7 @@
 #ifndef __EDJVU_PRIVATE_H__
 #define __EDJVU_PRIVATE_H__
 
-#include <Ecore_Data.h>
-
+#include <Eina.h>
 #include <libdjvu/ddjvuapi.h>
 
 typedef struct _Edjvu_Document Edjvu_Document;
@@ -32,7 +31,7 @@ struct _Edjvu_Document {
 struct _Edjvu_Index_Item {
     char *title;
     int page;
-    Ecore_List *children;
+    Eina_List *children;
 };
 
 #endif                          /* __EDJVU_PRIVATE_H__ */

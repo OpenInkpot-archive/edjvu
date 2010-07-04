@@ -2,14 +2,14 @@
 #include <libdjvu/ddjvuapi.h>
 #include <libdjvu/miniexp.h>
 
-#include <Ecore.h>
+#include <Eina.h>
 
 #include "edjvu_private.h"
 #include "edjvu_misc.h"
 #include "Edjvu.h"
 
-static void edjvu_index_fill(Ecore_List * items, miniexp_t outline);
-static void edjvu_index_unfill(Ecore_List * items);
+static void edjvu_index_fill(Eina_List ** items, miniexp_t outline);
+static void edjvu_index_unfill(Eina_List * items);
 
 /* Index item */
 Edjvu_Index_Item *
@@ -39,8 +39,7 @@ edjvu_index_item_delete(Edjvu_Index_Item * item)
     if (item->children) {
         Edjvu_Index_Item *i;
 
-        ecore_list_first_goto(item->children);
-        while ((i = (Edjvu_Index_Item *) ecore_list_next(item->children)))
+        EINA_LIST_FREE(item->children, i)
             edjvu_index_item_delete(i);
     }
     free(item);
@@ -55,7 +54,7 @@ edjvu_index_item_title_get(const Edjvu_Index_Item * item)
     return item->title;
 }
 
-Ecore_List *
+Eina_List *
 edjvu_index_item_children_get(const Edjvu_Index_Item * item)
 {
     if (!item)
@@ -76,15 +75,13 @@ edjvu_index_item_page_get(const Edjvu_Document * doc,
 
 /* Index */
 
-Ecore_List *
+Eina_List *
 edjvu_index_new(const Edjvu_Document * doc)
 {
-    Ecore_List *index = NULL;
+    Eina_List *index = NULL;
 
     if (!doc)
         return index;
-
-    index = ecore_list_new();
 
     miniexp_t outline;
     while ((outline =
@@ -95,7 +92,7 @@ edjvu_index_new(const Edjvu_Document * doc)
         && miniexp_length(outline) > 0
         && miniexp_symbolp(miniexp_car(outline))
         && !strcmp(miniexp_to_name(miniexp_car(outline)), "bookmarks"))
-        edjvu_index_fill(index, miniexp_cdr(outline));
+        edjvu_index_fill(&index, miniexp_cdr(outline));
 
     ddjvu_miniexp_release(doc->document, outline);
 
@@ -103,7 +100,7 @@ edjvu_index_new(const Edjvu_Document * doc)
 }
 
 void
-edjvu_index_delete(Ecore_List * index)
+edjvu_index_delete(Eina_List * index)
 {
     if (!index)
         return;
@@ -112,12 +109,9 @@ edjvu_index_delete(Ecore_List * index)
 }
 
 static void
-edjvu_index_fill(Ecore_List * items, miniexp_t outline)
+edjvu_index_fill(Eina_List ** items, miniexp_t outline)
 {
-    if (!items)
-        return;
-
-    if (!miniexp_listp(outline))
+    if (!items || !miniexp_listp(outline))
         return;
 
     miniexp_t cur = miniexp_car(outline);
@@ -133,11 +127,11 @@ edjvu_index_fill(Ecore_List * items, miniexp_t outline)
         if (page && *page == '#')
             item->page = atoi(page + 1) - 1;
 
-        ecore_list_append(items, item);
+        *items = eina_list_append(*items, item);
 
         if (miniexp_cddr(cur) != miniexp_nil) {
-            item->children = ecore_list_new();
-            edjvu_index_fill(item->children, miniexp_cddr(cur));
+            item->children = NULL;
+            edjvu_index_fill(&item->children, miniexp_cddr(cur));
         }
     }
 
@@ -146,15 +140,14 @@ edjvu_index_fill(Ecore_List * items, miniexp_t outline)
 }
 
 static void
-edjvu_index_unfill(Ecore_List * items)
+edjvu_index_unfill(Eina_List * items)
 {
     Edjvu_Index_Item *item;
 
     if (!items)
         return;
 
-    ecore_list_first_goto(items);
-    while ((item = (Edjvu_Index_Item *) ecore_list_next(items))) {
+    EINA_LIST_FREE(items, item) {
         if (item->title)
             free(item->title);
         if (item->children)
@@ -162,5 +155,4 @@ edjvu_index_unfill(Ecore_List * items)
 
         free(item);
     }
-    ecore_list_destroy(items);
 }

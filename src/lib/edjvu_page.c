@@ -1,5 +1,4 @@
 #include <Evas.h>
-#include <Ecore_Data.h>
 
 #include <libdjvu/ddjvuapi.h>
 
