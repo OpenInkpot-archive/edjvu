@@ -1,3 +1,9 @@
+edjvu (0.1.4) zelazny; urgency=low
+
+  * Adjust edjvu to work with 8bpp image data
+
+ -- Alexander Kerner <lunohod@openinkpot.org>  Fri, 20 Aug 2010 15:17:03 +0200
+
 edjvu (0.1.3) zelazny; urgency=low
 
   * Adjustment to ecore API changes
