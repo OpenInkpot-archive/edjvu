@@ -151,13 +151,13 @@ edjvu_page_render_slice(Edjvu_Page * page,
 
     if (ddjvu_page_render(page->page, render_mode,
                           &prect, &rrect, page->format, rrect.w, buf)) {
-        char *d = (char *) evas_object_image_data_get(o, 1);
-        char *s = buf;
-        for (int i = 0; i < height * width; i++, s++, d += 4) {
-            *d = *s;
-            *(d + 1) = *s;
-            *(d + 2) = *s;
-            *(d + 3) = 0xff;
+        unsigned char *d = (char *) evas_object_image_data_get(o, 1);
+        int stride = evas_object_image_stride_get(o);
+        unsigned char *s = buf;
+        for (int i = 0; i < height; i++) {
+            memcpy(d, s, width);
+            s += width;
+            d += stride;
         }
     }
 
