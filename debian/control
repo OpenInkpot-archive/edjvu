@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 6), cdbs, automake1.7 | automaken, libtool, pkg-con
 Standards-Version: 3.7.3
 Homepage: http://www.enlightenment.org
 XCS-Cross-Host-Build-Depends: debhelper (>= 6), cdbs, cdbs-embedded, automake, libtool, pkg-config
-XCS-Cross-Build-Depends: libecore-dev, libevas-dev, libdjvulibre-dev
+XCS-Cross-Build-Depends: libecore-dev, libevas-dev (>= 0.9.9.49898-2), libdjvulibre-dev
 XS-Vcs-Git: http://git.openinkpot.org/edjvu.git
 XS-Vcs-Browser: http://git.openinkpot.org/edjvu.git
 
